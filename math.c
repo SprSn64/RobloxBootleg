@@ -92,7 +92,7 @@ int matrixRotate(float matrix[16], Vector3 rotate){
 	zMatrix[0] = calcs[5]; zMatrix[1] = -calcs[4];
 	zMatrix[4] = calcs[4]; zMatrix[5] = calcs[5];
 	
-	newMatrix = multMatrix(multMatrix(multMatrix(matrix, yMatrix), xMatrix), zMatrix);
+	newMatrix = multMatrix(multMatrix(multMatrix(matrix, xMatrix), yMatrix), zMatrix);
 	
 	memcpy(matrix, newMatrix, sizeof(float) * 16);
 	return 0;

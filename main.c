@@ -18,7 +18,7 @@ const char *fragmentShaderSource;
 Vector2 windowScale = {640, 480};
 Camera camera = {(Vector3){0, 0, 0.5}, (Vector3){0, 0, 0}};
 float cameraMoveSpeed = 960.f;
-float cameraRotSpeed = 960.f;
+float cameraRotSpeed = 12.f;
 
 GLFWwindow* window = NULL;
 
@@ -150,7 +150,7 @@ int main(int argc, char *argv[]){
 	int viewLoc = glGetUniformLocation(shaderProgram, "view");	
 	int projLoc = glGetUniformLocation(shaderProgram, "proj");
 	
-	matrixTranslate(viewMatrix, (Vector3){0, 0, 0.5f});
+	matrixTranslate(viewMatrix, (Vector3){0, 0, -0.5f});
 	
 	glClearColor(0.078f, 0.086f, 0.124f, 1.0f);
 	
@@ -176,11 +176,11 @@ int main(int argc, char *argv[]){
 		camera.pos.y += (keyList[5].down - keyList[4].down) * cameraMoveSpeed * deltaTime;
 		camera.pos.z += (-sin(camera.rot.y) * (keyList[2].down - keyList[3].down) + cos(camera.rot.y) * (keyList[1].down - keyList[0].down)) * cameraMoveSpeed * deltaTime;
 		
-		camera.rot.y += (keyList[8].down - keyList[9].down) * cameraRotSpeed * deltaTime;
+		camera.rot.y += (keyList[9].down - keyList[8].down) * cameraRotSpeed * deltaTime;
+		camera.rot.x += (keyList[7].down - keyList[6].down) * cameraRotSpeed * deltaTime;
 		
-		matrixTranslate(viewMatrix, (Vector3){0, -camera.pos.y, -camera.pos.z});
-		matrixRotate(viewMatrix, camera.rot);
 		matrixTranslate(viewMatrix, camera.pos);
+		matrixRotate(viewMatrix, (Vector3){camera.rot.x * RAD2DEG, camera.rot.y * RAD2DEG, camera.rot.z * RAD2DEG});
 		
 		//matrixRotate(localMatrix, (Vector3){0.f, deltaTime * 960, 0.f});
 		
