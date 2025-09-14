@@ -6,9 +6,10 @@ out vec3 colour;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 proj;
+uniform mat4 camera;
 
 in float timer;
 void main(){
-	gl_Position = proj * view * model * vec4(aPos, 1.0);
+	gl_Position = proj * model * view * camera * vec4(aPos, 1.0);
 	colour = aColor;
 }

@@ -146,6 +146,9 @@ int main(int argc, char *argv[]){
 	float *viewMatrix = initMatrix();
 	float *projMatrix = initMatrix();//perspMatrix(45.f * DEG2RAD, windowScale.x / windowScale.y, 0.1f, 100.f);
 	
+	float *cameraMatrix = initMatrix();
+	int cameraLoc = glGetUniformLocation(shaderProgram, "camera");
+	
 	int modelLoc = glGetUniformLocation(shaderProgram, "model");
 	int viewLoc = glGetUniformLocation(shaderProgram, "view");	
 	int projLoc = glGetUniformLocation(shaderProgram, "proj");
@@ -171,15 +174,16 @@ int main(int argc, char *argv[]){
 		//viewMatrix[14] = (float)sin(timer / 48);
 		
 		viewMatrix = initMatrix();
+		cameraMatrix = initMatrix();
 		
-		camera.pos.x += (cos(camera.rot.y) * (keyList[2].down - keyList[3].down) + sin(camera.rot.y) * (keyList[1].down - keyList[0].down)) * cameraMoveSpeed * deltaTime;
+		camera.pos.x += (cos(camera.rot.y * RAD2DEG) * (keyList[2].down - keyList[3].down) + sin(camera.rot.y * RAD2DEG) * (keyList[1].down - keyList[0].down)) * cameraMoveSpeed * deltaTime;
 		camera.pos.y += (keyList[5].down - keyList[4].down) * cameraMoveSpeed * deltaTime;
-		camera.pos.z += (-sin(camera.rot.y) * (keyList[2].down - keyList[3].down) + cos(camera.rot.y) * (keyList[1].down - keyList[0].down)) * cameraMoveSpeed * deltaTime;
+		camera.pos.z += (-sin(camera.rot.y * RAD2DEG) * (keyList[2].down - keyList[3].down) + cos(camera.rot.y * RAD2DEG) * (keyList[1].down - keyList[0].down)) * cameraMoveSpeed * deltaTime;
 		
 		camera.rot.y += (keyList[9].down - keyList[8].down) * cameraRotSpeed * deltaTime;
 		camera.rot.x += (keyList[7].down - keyList[6].down) * cameraRotSpeed * deltaTime;
 		
-		matrixTranslate(viewMatrix, camera.pos);
+		matrixTranslate(cameraMatrix, camera.pos);
 		matrixRotate(viewMatrix, (Vector3){camera.rot.x * RAD2DEG, camera.rot.y * RAD2DEG, camera.rot.z * RAD2DEG});
 		
 		//matrixRotate(localMatrix, (Vector3){0.f, deltaTime * 960, 0.f});
@@ -204,6 +208,7 @@ int main(int argc, char *argv[]){
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, localMatrix);
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, viewMatrix);
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, projMatrix);
+		glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, cameraMatrix);
 		
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
