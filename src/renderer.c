@@ -5,6 +5,6 @@
 #include <math.h>
 
 #include "renderer.h"
-#include "structs.h"
+#include <types.h>
 
-extern GLFWwindow* window;
+extern GLFWwindow *window;

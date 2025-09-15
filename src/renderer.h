@@ -2,6 +2,6 @@
 #define RENDER_H
 
 #include <GLFW/glfw3.h>
-#include "structs.h"
+#include <types.h>
 
 #endif

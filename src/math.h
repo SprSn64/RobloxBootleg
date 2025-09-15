@@ -1,7 +1,7 @@
 #ifndef MATH_H
 #define MATH_H
 
-#include "structs.h"
+#include <types.h>
 
 #define PI 3.141259
 #define DEG2RAD PI / 180
