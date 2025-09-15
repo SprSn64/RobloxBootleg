@@ -33,95 +33,50 @@ double deltaTime = 0;
 float timer = 0;
 
 float triVerts[] = {
-	-0.5f,
-	-0.5f,
-	-0.5f,
-	1.f,
-	0.f,
-	0.f,
-	0.5f,
-	-0.5f,
-	-0.5f,
-	0.f,
-	1.f,
-	0.f,
-	0.5f,
-	-0.5f,
-	0.5f,
-	0.f,
-	0.f,
-	1.f,
-	-0.5f,
-	-0.5f,
-	0.5f,
-	1.f,
-	1.f,
-	0.f,
-	0.f,
-	0.5f,
-	0.f,
-	1.f,
-	0.f,
-	1.f,
+	-0.5f, -0.5f, -0.5f, 	1.f, 0.f, 0.f,
+	0.5f, -0.5f, -0.5f,	0.f, 1.f, 0.f,
+	0.5f, -0.5f, 0.5f,	0.f, 0.f, 1.f,
+	-0.5f, -0.5f, 0.5f,	1.f, 1.f, 0.f,
+	0.f, 0.5f, 0.f,		1.f, 0.f, 1.f,
 };
 
 unsigned int triFaces[] = {
-	0,
-	1,
-	4,
-	1,
-	2,
-	4,
-	2,
-	3,
-	4,
-	3,
-	0,
-	4,
-	2,
-	1,
-	0,
-	0,
-	3,
-	2,
+	0, 1, 4,
+	1, 2, 4,
+	2, 3, 4,
+	3, 0, 4,
+	2, 1, 0,
+	0, 3, 2,
 };
 
-void error_callback(int error, const char *description)
-{
+void error_callback(int error, const char *description){
 	fprintf(stderr, "Error: %s\n", description);
 }
 
-void window_close_callback(GLFWwindow *window)
-{
+void window_close_callback(GLFWwindow *window){
 	glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
-void window_size_callback(GLFWwindow *window, int width, int height)
-{
+void window_size_callback(GLFWwindow *window, int width, int height){
 	windowScale = (Vector2){width, height};
 }
 
-static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
-{
+static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods){
 	// if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	//     glfwSetWindowShouldClose(window, GLFW_TRUE);
-	for (int i = 0; i < KEYCOUNT; i++)
-	{
+	for (int i = 0; i < KEYCOUNT; i++){
 		keyList[i].down = glfwGetKey(window, keyList[i].scanCode); //(key == keyList[i].scanCode && action == GLFW_PRESS);
 	}
 }
 
-int main(int argc, char *argv[])
-{
-
+int main(int argc, char *argv[]){
 	printf("kill people\n");
-	if (!glfwInit())
-	{
-#ifdef _WIN32
-		MessageBox(NULL, "OpenGL... no workies!", "Whoops!", 16 | MB_OK);
-#else
-		fprintf(stderr, "OpenGL... no workies!, Whoops!");
-#endif
+	if (!glfwInit()){
+		#ifdef _WIN32
+			MessageBox(NULL, "OpenGL... no workies!", "Whoops!", 16 | MB_OK);
+		#else
+			fprintf(stderr, "OpenGL... no workies!, Whoops!");
+		#endif
 		return 1;
 	}
 
@@ -222,8 +177,7 @@ int main(int argc, char *argv[])
 	keyList[8].scanCode = GLFW_KEY_LEFT;
 	keyList[9].scanCode = GLFW_KEY_RIGHT;
 
-	while (!glfwWindowShouldClose(window))
-	{
+	while (!glfwWindowShouldClose(window)){
 		last = now;
 		now = glfwGetTime();
 		deltaTime = min(((double)now - (double)last) / 1000.0f, 1);

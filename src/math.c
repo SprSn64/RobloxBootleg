@@ -5,17 +5,14 @@
 #include "math.h"
 #include <types.h>
 
-float lerp(float a, float b, float t)
-{
+float lerp(float a, float b, float t){
 	return (a + t * (b - a));
 }
-float invLerp(float a, float b, float v)
-{
+float invLerp(float a, float b, float v){
 	return (a - v) / (b - a);
 }
 
-float *multMatrix(float matrixA[16], float matrixB[16])
-{
+float *multMatrix(float matrixA[16], float matrixB[16]){
 	// horrible code warning
 	float *output;
 	output = malloc(sizeof(float) * 16);
@@ -40,8 +37,7 @@ float *multMatrix(float matrixA[16], float matrixB[16])
 	return output;
 }
 
-Vector4 matrixTransform(Vector4 input, float matrix[16])
-{
+Vector4 matrixTransform(Vector4 input, float matrix[16]){
 	Vector4 output = {
 		input.x * matrix[0] + input.y * matrix[4] + input.z * matrix[8] + input.w * matrix[12],
 		input.x * matrix[1] + input.y * matrix[5] + input.z * matrix[9] + input.w * matrix[13],
@@ -51,8 +47,7 @@ Vector4 matrixTransform(Vector4 input, float matrix[16])
 	return output;
 }
 
-float *initMatrix()
-{
+float *initMatrix(){
 	float *output;
 	output = malloc(sizeof(float) * 16);
 	for (int i = 0; i < 16; i++)
@@ -64,8 +59,7 @@ float *initMatrix()
 	return output;
 }
 
-float *perspMatrix(float fov, float aspect, float zNear, float zFar)
-{
+float *perspMatrix(float fov, float aspect, float zNear, float zFar){
 	char rORl = 0;
 	char ZOorNO = 1;
 	float halfFov = tan(fov / 2);
@@ -88,8 +82,7 @@ float *perspMatrix(float fov, float aspect, float zNear, float zFar)
 	return output;
 }
 
-int matrixRotate(float matrix[16], Vector3 rotate)
-{
+int matrixRotate(float matrix[16], Vector3 rotate){
 	float *newMatrix = initMatrix();
 	float calcs[6] = {sin(rotate.x), cos(rotate.x), sin(rotate.y), cos(rotate.y), sin(rotate.z), cos(rotate.z)};
 
@@ -117,16 +110,14 @@ int matrixRotate(float matrix[16], Vector3 rotate)
 	return 0;
 }
 
-int matrixTranslate(float matrix[16], Vector3 translate)
-{
+int matrixTranslate(float matrix[16], Vector3 translate){
 	matrix[12] += translate.x;
 	matrix[13] += translate.y;
 	matrix[14] += translate.z;
 	return 0;
 }
 
-int matrixScale(float matrix[16], Vector3 scale)
-{
+int matrixScale(float matrix[16], Vector3 scale){
 	matrix[0] += scale.x;
 	matrix[5] += scale.y;
 	matrix[11] += scale.z;

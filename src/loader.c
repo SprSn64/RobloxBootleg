@@ -3,7 +3,7 @@
 
 #include "loader.h"
 
-char* loadTextFile(char* dir) {
+char* loadTextFile(char* dir){
     FILE *file = fopen(dir, "r");
     if (!file) return NULL;
 
@@ -12,7 +12,7 @@ char* loadTextFile(char* dir) {
     rewind(file);
 
     char *buffer = malloc(size + 1);
-    if (!buffer) {
+    if (!buffer){
         fclose(file);
         return NULL;
     }
