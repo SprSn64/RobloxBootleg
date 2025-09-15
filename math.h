@@ -18,5 +18,6 @@ float *perspMatrix(float fov, float aspect, float zNear, float zFar);
 float *multMatrix(float matrixA[16], float matrixB[16]);
 int matrixTranslate(float matrix[16], Vector3 translate);
 int matrixRotate(float matrix[16], Vector3 rotate);
+int matrixScale(float matrix[16], Vector3 scale);
 
 #endif

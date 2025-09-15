@@ -2,7 +2,6 @@
 #include <string.h>
 #include <math.h>
 
-
 #include "math.h"
 #include "structs.h"
 
@@ -100,5 +99,10 @@ int matrixRotate(float matrix[16], Vector3 rotate){
 
 int matrixTranslate(float matrix[16], Vector3 translate){
 	matrix[12] += translate.x; matrix[13] += translate.y; matrix[14] += translate.z;
+	return 0;
+}
+
+int matrixScale(float matrix[16], Vector3 scale){
+	matrix[0] += scale.x; matrix[5] += scale.y; matrix[11] += scale.z;
 	return 0;
 }

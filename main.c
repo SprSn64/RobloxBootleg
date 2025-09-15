@@ -1,6 +1,7 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
+#include <windows.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -30,7 +31,7 @@ double now = 0;
 double deltaTime = 0;
 float timer = 0;
 
-float vertices[] = {
+float triVerts[] = {
 	-0.5f, -0.5f,  -0.5f,     	1.f, 0.f, 0.f,
 	0.5f, -0.5f,  -0.5f,    	0.f, 1.f, 0.f,
 	0.5f, -0.5f,  0.5f,     	0.f, 0.f, 1.f,
@@ -38,7 +39,7 @@ float vertices[] = {
 	0.f, 0.5f,  0.f,     		1.f, 0.f, 1.f,
 };
 
-unsigned int indices[] = {
+unsigned int triFaces[] = {
 	0, 1, 4,
 	1, 2, 4,
 	2, 3, 4,
@@ -69,8 +70,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 }
 
 int main(int argc, char *argv[]){
+	
 	printf("kill people\n");
-	if(!glfwInit())return 1;
+	if(!glfwInit()){
+		MessageBox(NULL, "OpenGL... no workies!", "Whoops!", 16 | MB_OK); return 1;
+	}
 	
 	vertexShaderSource = loadTextFile("assets/shaders/default.vert");
 	fragmentShaderSource = loadTextFile("assets/shaders/default.frag");
@@ -127,11 +131,11 @@ int main(int argc, char *argv[]){
 	
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triVerts), triVerts, GL_STATIC_DRAW);
 	
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(triFaces), triFaces, GL_STATIC_DRAW);
 	
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -211,7 +215,7 @@ int main(int argc, char *argv[]){
 		glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, cameraMatrix);
 		
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(triFaces) / sizeof(int), GL_UNSIGNED_INT, 0);
  
 		glfwSwapBuffers(window);
 		glfwPollEvents();
