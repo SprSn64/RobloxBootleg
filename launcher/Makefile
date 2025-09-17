@@ -3,7 +3,7 @@ TARGET := RobloxBootlegLauncher
 CC := gcc
 CFLAGS := -Wall -Wextra -O3 -Iinclude -I
 ifeq ($(OS),Windows_NT)
-	LDFLAGS := -I src/include -L src/lib
+	LDFLAGS := -lSDL3 -lSDL3_image -Llib/SDL3_image
 else
 	LDFLAGS := -lGL -lX11 -lXrandr -lXi -ldl -lpthread -lm -lglfw
 endif

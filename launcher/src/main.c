@@ -15,8 +15,11 @@ SDL_Point windowScale = {640, 360};
 SDL_FPoint mousePos;
 SDL_MouseButtonFlags mouseFlags;
 
-SDL_FRect buttonRect = {420, 240, 160, 32};
 bool buttonHover, buttonPressed = false;
+SDL_FRect buttonRect = {420, 240, 160, 32};
+
+bool buttonHoverDisc, buttonPressedDisc = false;
+SDL_FRect buttonRectDisc = {610, 2, 28, 28};
 
 Uint64 last = 0;
 Uint64 now = 0;
@@ -25,6 +28,7 @@ double deltaTime = 0;
 float timer = 0;
 
 SDL_Texture *fontTex = NULL;
+SDL_Texture *buttonTex = NULL;
 
 void drawText(SDL_Renderer *renderer, SDL_Texture *texture, char* text, char charOff, short posX, short posY, short width, short height, short kern);
 
@@ -45,6 +49,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]){
 	}
 	
 	fontTex = newTexture("assets/font.png");
+	buttonTex = newTexture("assets/buttonicons.png");
 	
 	SDL_SetRenderVSync(renderer, 1);
 
@@ -73,30 +78,46 @@ SDL_AppResult SDL_AppIterate(void *appstate){
 	drawText(renderer, fontTex, "Commence thyne launchere!", 32, 0, 0, 8, 8, 7);
 	
 	buttonHover = (mousePos.x >= buttonRect.x && mousePos.y >= buttonRect.y && mousePos.x <= buttonRect.x + buttonRect.w && mousePos.y <= buttonRect.y  + buttonRect.h);
-	
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderFillRect(renderer, &(SDL_FRect){buttonRect.x - 1, buttonRect.y - 1, buttonRect.w + 2, buttonRect.h + 2});
 	SDL_SetRenderDrawColor(renderer, 28 + 32 * buttonHover, 30 + 32 * buttonHover, 32 + 32 * buttonHover, 255);
 	SDL_RenderFillRect(renderer, &buttonRect);	
 	drawText(renderer, fontTex, "sure why not", 32, buttonRect.x + 4, buttonRect.y + 4, 8, 8, 7);	
 	
-	SDL_SetCursor(SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_POINTER * buttonHover));
-	
 	if(buttonHover && (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS && (mouseFlags & SDL_BUTTON_LMASK))){
-		if(buttonPressed = false)buttonPressed = true;
-		SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
-		SDL_RenderFillRect(renderer, &buttonRect);
-		return SDL_APP_SUCCESS;
+		if(!buttonPressed){
+			buttonPressed = true;
+			return SDL_APP_SUCCESS;
+		}
 	}else{
 		buttonPressed = false;
 	}
+	
+	//discord button
+	buttonHoverDisc = (mousePos.x >= buttonRectDisc.x && mousePos.y >= buttonRectDisc.y && mousePos.x <= buttonRectDisc.x + buttonRectDisc.w && mousePos.y <= buttonRectDisc.y  + buttonRectDisc.h);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderFillRect(renderer, &(SDL_FRect){buttonRectDisc.x - 1, buttonRectDisc.y - 1, buttonRectDisc.w + 2, buttonRectDisc.h + 2});
+	SDL_SetRenderDrawColor(renderer, 28 + 32 * buttonHoverDisc, 30 + 32 * buttonHoverDisc, 32 + 32 * buttonHoverDisc, 255);
+	SDL_RenderFillRect(renderer, &buttonRectDisc);	
+	SDL_RenderTexture(renderer, buttonTex, &(SDL_FRect){0, 0, 24, 24}, &(SDL_FRect){buttonRectDisc.x + 2, buttonRectDisc.y + 2, 24, 24});	
+	
+	if(buttonHoverDisc && (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS && (mouseFlags & SDL_BUTTON_LMASK))){
+		if(!buttonPressedDisc){
+			buttonPressedDisc = true;
+			SDL_OpenURL("https://discord.gg/Uc55FwD2aP");
+		}
+	}else{
+		buttonPressedDisc = false;
+	}
+	
+	SDL_SetCursor(SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_POINTER * (buttonHover || buttonHoverDisc)));
 	
 	SDL_RenderPresent(renderer);  /* put it all on the screen! */
 	return SDL_APP_CONTINUE;  /* carry on with the program! */
 }
 
 void SDL_AppQuit(void *appstate, SDL_AppResult result){
-	SDL_DestroyTexture(fontTex);
+	SDL_DestroyTexture(fontTex); SDL_DestroyTexture(buttonTex);
 }
 
 SDL_Texture *newTexture(char* path){
