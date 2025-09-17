@@ -5,7 +5,7 @@ CFLAGS := -Wall -Wextra -O3 -Iinclude
 ifeq ($(OS),Windows_NT)
 	LDFLAGS := -lgdi32 -lopengl32 -lglfw3
 else
-	LDFLAGS := -lGL -lX11 -lXrandr -lXi -ldl -lpthread -lm -lglfw
+	LDFLAGS := -lGL -lm -lglfw
 endif
 
 SOURCES := $(wildcard $(addsuffix /*.c,$(COMPILE_FOLDERS)))
