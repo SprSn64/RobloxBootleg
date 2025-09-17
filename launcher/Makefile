@@ -1,9 +1,9 @@
 COMPILE_FOLDERS := src
-TARGET := RobloxBootlegEngine
+TARGET := RobloxBootlegLauncher
 CC := gcc
-CFLAGS := -Wall -Wextra -O3 -Iinclude
+CFLAGS := -Wall -Wextra -O3 -Iinclude -I
 ifeq ($(OS),Windows_NT)
-	LDFLAGS := -lgdi32 -lopengl32 -lglfw3
+	LDFLAGS := -I src/include -L src/lib
 else
 	LDFLAGS := -lGL -lX11 -lXrandr -lXi -ldl -lpthread -lm -lglfw
 endif
