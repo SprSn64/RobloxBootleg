@@ -1,8 +1,15 @@
+#define SDL_MAIN_USE_CALLBACKS 1
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
+#include <SDL3_image/SDL_image.h>
+
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
+
 #ifdef _WIN32
-#include <windows.h>
+	#include <windows.h>
 #endif
+
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -48,28 +55,23 @@ unsigned int triFaces[] = {
 	2, 1, 0,
 	0, 3, 2,
 };
-
-void error_callback(int error, const char *description){
-	fprintf(stderr, "Error: %s\n", description);
+	
+void SDL_AppQuit(void *appstate, SDL_AppResult result){
+	glfwDestroyWindow(window);
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+	glDeleteProgram(shaderProgram);
+	glfwTerminate();
 }
 
-void window_close_callback(GLFWwindow *window){
-	glfwSetWindowShouldClose(window, GLFW_TRUE);
-}
-
-void window_size_callback(GLFWwindow *window, int width, int height){
-	windowScale = (Vector2){width, height};
-}
-
-static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods){
-	// if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-	//     glfwSetWindowShouldClose(window, GLFW_TRUE);
-	for (int i = 0; i < KEYCOUNT; i++){
-		keyList[i].down = glfwGetKey(window, keyList[i].scanCode); //(key == keyList[i].scanCode && action == GLFW_PRESS);
+void HandleKeyInput(){
+	const bool* keyState = SDL_GetKeyboardState(NULL);
+	for(int i = 0; i < 4; i++){
+		keyList[i].down = keyState[keyList[i].scanCode];
 	}
 }
-
-int main(int argc, char *argv[]){
+SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]){
 	printf("kill people\n");
 	if (!glfwInit()){
 		#ifdef _WIN32
@@ -87,7 +89,6 @@ int main(int argc, char *argv[]){
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	glfwSetErrorCallback(error_callback);
 	window = glfwCreateWindow(windowScale.x, windowScale.y, "Kill People", NULL, NULL);
 	if (!window)
 		return 1;
@@ -97,10 +98,6 @@ int main(int argc, char *argv[]){
 	glfwMakeContextCurrent(window);
 	gladLoadGL(glfwGetProcAddress);
 	glfwSwapInterval(1);
-
-	glfwSetWindowCloseCallback(window, window_close_callback);
-	glfwSetWindowSizeCallback(window, window_size_callback);
-	glfwSetKeyCallback(window, key_callback);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -176,59 +173,57 @@ int main(int argc, char *argv[]){
 	keyList[7].scanCode = GLFW_KEY_DOWN;
 	keyList[8].scanCode = GLFW_KEY_LEFT;
 	keyList[9].scanCode = GLFW_KEY_RIGHT;
+}
 
+SDL_AppResult SDL_AppIterate(void *appstate){
+	last = now;
+	now = glfwGetTime();
+	deltaTime = min(((double)now - (double)last) / 1000.0f, 1);
+	timer += deltaTime;
+	
+	windowScale = (Vector2){width, height};
+	
+	// badtimer++;
+	glUseProgram(shaderProgram);
+	// viewMatrix[14] = (float)sin(timer / 48);
+	viewMatrix = initMatrix();
+	cameraMatrix = initMatrix();
+	camera.pos.x += (cos(camera.rot.y * RAD2DEG) * (keyList[2].down - keyList[3].down) + sin(camera.rot.y * RAD2DEG) * (keyList[1].down - keyList[0].down)) * cameraMoveSpeed * deltaTime;
+	camera.pos.y += (keyList[5].down - keyList[4].down) * cameraMoveSpeed * deltaTime;
+	camera.pos.z += (-sin(camera.rot.y * RAD2DEG) * (keyList[2].down - keyList[3].down) + cos(camera.rot.y * RAD2DEG) * (keyList[1].down - keyList[0].down)) * cameraMoveSpeed * deltaTime;
+	camera.rot.y += (keyList[9].down - keyList[8].down) * cameraRotSpeed * deltaTime;
+	camera.rot.x += (keyList[7].down - keyList[6].down) * cameraRotSpeed * deltaTime;
+	matrixTranslate(cameraMatrix, camera.pos);
+	matrixRotate(viewMatrix, (Vector3){camera.rot.x * RAD2DEG, camera.rot.y * RAD2DEG, camera.rot.z * RAD2DEG});
+	// matrixRotate(localMatrix, (Vector3){0.f, deltaTime * 960, 0.f});
+	// matrixRotate(viewMatrix, (Vector3){RAD2DEG * 23 * deltaTime, 0, 0});
+	// matrixRotate(viewMatrix, (Vector3){0, RAD2DEG * 30 * deltaTime, 0});
+	// matrixRotate(viewMatrix, (Vector3){0, 0, RAD2DEG * 9 * deltaTime});
+	// viewMatrix[12] = (float)sin(RAD2DEG * timer * 24) / 2;
+	// viewMatrix[13] = (float)cos(RAD2DEG * timer * 24) / 2;
+	// viewMatrix[14] = (float)sin(RAD2DEG * timer * 12) / 2 + 0.5f;
+	projMatrix = perspMatrix(80.f * DEG2RAD, (float)windowScale.x / windowScale.y, 0.1f, 100.f);
+	// float shaderTimer = sin(timer) / 2 + 1;
+	// float shaderTimer = 1;
+	glViewport(0, 0, windowScale.x, windowScale.y);
+	glClearColor(0.078f, 0.086f, 0.124f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, localMatrix);
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, viewMatrix);
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, projMatrix);
+	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, cameraMatrix);
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, sizeof(triFaces) / sizeof(int), GL_UNSIGNED_INT, 0);
+
+	glfwSwapBuffers(window);
+	glfwPollEvents();
+	
+	//SDL_RenderPresent(renderer);  /* put it all on the screen! */
+	return SDL_APP_CONTINUE;  /* carry on with the program! */
+}
+
+int main(int argc, char *argv[]){
 	while (!glfwWindowShouldClose(window)){
-		last = now;
-		now = glfwGetTime();
-		deltaTime = min(((double)now - (double)last) / 1000.0f, 1);
-		timer += deltaTime;
-		// badtimer++;
-
-		glUseProgram(shaderProgram);
-		// viewMatrix[14] = (float)sin(timer / 48);
-
-		viewMatrix = initMatrix();
-		cameraMatrix = initMatrix();
-
-		camera.pos.x += (cos(camera.rot.y * RAD2DEG) * (keyList[2].down - keyList[3].down) + sin(camera.rot.y * RAD2DEG) * (keyList[1].down - keyList[0].down)) * cameraMoveSpeed * deltaTime;
-		camera.pos.y += (keyList[5].down - keyList[4].down) * cameraMoveSpeed * deltaTime;
-		camera.pos.z += (-sin(camera.rot.y * RAD2DEG) * (keyList[2].down - keyList[3].down) + cos(camera.rot.y * RAD2DEG) * (keyList[1].down - keyList[0].down)) * cameraMoveSpeed * deltaTime;
-
-		camera.rot.y += (keyList[9].down - keyList[8].down) * cameraRotSpeed * deltaTime;
-		camera.rot.x += (keyList[7].down - keyList[6].down) * cameraRotSpeed * deltaTime;
-
-		matrixTranslate(cameraMatrix, camera.pos);
-		matrixRotate(viewMatrix, (Vector3){camera.rot.x * RAD2DEG, camera.rot.y * RAD2DEG, camera.rot.z * RAD2DEG});
-
-		// matrixRotate(localMatrix, (Vector3){0.f, deltaTime * 960, 0.f});
-
-		// matrixRotate(viewMatrix, (Vector3){RAD2DEG * 23 * deltaTime, 0, 0});
-		// matrixRotate(viewMatrix, (Vector3){0, RAD2DEG * 30 * deltaTime, 0});
-		// matrixRotate(viewMatrix, (Vector3){0, 0, RAD2DEG * 9 * deltaTime});
-
-		// viewMatrix[12] = (float)sin(RAD2DEG * timer * 24) / 2;
-		// viewMatrix[13] = (float)cos(RAD2DEG * timer * 24) / 2;
-		// viewMatrix[14] = (float)sin(RAD2DEG * timer * 12) / 2 + 0.5f;
-
-		projMatrix = perspMatrix(80.f * DEG2RAD, (float)windowScale.x / windowScale.y, 0.1f, 100.f);
-
-		// float shaderTimer = sin(timer) / 2 + 1;
-		// float shaderTimer = 1;
-
-		glViewport(0, 0, windowScale.x, windowScale.y);
-		glClearColor(0.078f, 0.086f, 0.124f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, localMatrix);
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, viewMatrix);
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, projMatrix);
-		glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, cameraMatrix);
-
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, sizeof(triFaces) / sizeof(int), GL_UNSIGNED_INT, 0);
-
-		glfwSwapBuffers(window);
-		glfwPollEvents();
 	}
 	glfwDestroyWindow(window);
 	glDeleteVertexArrays(1, &VAO);
