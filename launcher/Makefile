@@ -1,11 +1,11 @@
 COMPILE_FOLDERS := src
 TARGET := RobloxBootlegLauncher
 CC := gcc
-CFLAGS := -Wall -Wextra -O3 -Iinclude -I
+CFLAGS := -Wall -Wextra -O3 -Iinclude
 ifeq ($(OS),Windows_NT)
-	LDFLAGS := -lSDL3 -lSDL3_image -Llib/SDL3_image
+	LDFLAGS := -lSDL3 -lSDL3_image
 else
-	LDFLAGS := -lGL -lX11 -lXrandr -lXi -ldl -lpthread -lm -lglfw
+	LDFLAGS := -lGL -lX11 -lXrandr -lXi -ldl -lpthread -lm -lSDL3 -lSDL3_image
 endif
 
 SOURCES := $(wildcard $(addsuffix /*.c,$(COMPILE_FOLDERS)))
