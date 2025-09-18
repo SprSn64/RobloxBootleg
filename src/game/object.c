@@ -7,7 +7,7 @@ S32 objectCount = 0;
 
 Object currentProcObj;
 
-Object createObject(ObjBhv bhv, U16 model, Vector3 pos, Vector3 rot){
+Object createObject(ObjBhv bhv, U16 model, Vector3 pos, Vector3 rot, Vector3 scale){
     Object obj;
     Graphics gfx = modelToGraphics[model];
     obj.verts = gfx.vtx;
@@ -18,7 +18,7 @@ Object createObject(ObjBhv bhv, U16 model, Vector3 pos, Vector3 rot){
     obj.pos = pos;
     obj.basePos = pos;
     obj.rot = rot;
-
+    obj.scale = scale;
     obj.bhv = bhv;
 
     glGenVertexArrays(1, &obj.VAO);

@@ -22,6 +22,7 @@ typedef struct Object {
     Vector3 pos;
     Vector3 basePos;
     Vector3 rot;
+    Vector3 scale;
     F32 timer;
 } Object;
 
@@ -32,5 +33,5 @@ extern Object objects[MAX_OBJECTS];
 
 extern Object currentProcObj;
 
-extern Object createObject(ObjBhv bhv, U16 model, Vector3 pos, Vector3 rot);
+extern Object createObject(ObjBhv bhv, U16 model, Vector3 pos, Vector3 rot, Vector3 scale);
 #endif //OBJECT_h
