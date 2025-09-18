@@ -3,6 +3,6 @@
 
 #include <types.h>
 
-CharColour* SetColor(unsigned char, unsigned char, unsigned char, unsigned char);
+CharColour* SetCharColor(unsigned char, unsigned char, unsigned char, unsigned char);
 
 #endif

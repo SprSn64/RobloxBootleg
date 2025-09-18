@@ -7,7 +7,7 @@
 
 //create colors violently
 
-CharColour* SetColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+CharColour* SetCharColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
     CharColour* localColor = malloc(sizeof(CharColour));
     localColor->r = r;
     localColor->g = g;
