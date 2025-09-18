@@ -8,6 +8,9 @@
 typedef struct PartClass{
 	Vector3 pos, rot, scale;
 	CharColour colour;
-} PartClass
+} PartClass;
+
+PartClass* CreatePartClass(Vector3, Vector3, Vector3, CharColour);
+void DeletePartClass(PartClass*);
 
 #endif
