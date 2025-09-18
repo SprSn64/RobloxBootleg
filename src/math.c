@@ -118,8 +118,8 @@ S32 matrixTranslate(MTX16 matrix, Vector3 translate){
 }
 
 S32 matrixScale(MTX16 matrix, Vector3 scale){
-	matrix[0] += scale.x;
-	matrix[5] += scale.y;
-	matrix[11] += scale.z;
+	matrix[0] *= scale.x;
+	matrix[5] *= scale.y;
+	matrix[11] *= scale.z;
 	return 0;
 }
