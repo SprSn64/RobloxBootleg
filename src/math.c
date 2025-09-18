@@ -106,6 +106,10 @@ S32 matrixRotate(MTX16 matrix, Vector3 rotate){
 
 	newMatrix = multMatrix(multMatrix(multMatrix(matrix, xMatrix), yMatrix), zMatrix);
 
+	free(xMatrix);
+	free(yMatrix);
+	free(zMatrix);
+	
 	memcpy(matrix, newMatrix, sizeof(MTX16));
 	return 0;
 }
