@@ -1,5 +1,5 @@
-#ifndef STRUCTS_H
-#define STRUCTS_H
+#ifndef __TYPES_H
+#define __TYPES_H
 
 #define max(a,b) ((a) > (b) ? (a) : (b))
 #define min(a,b) ((a) < (b) ? (a) : (b))
@@ -56,4 +56,4 @@ typedef struct Camera{
 	Vector3 rot;
 } Camera;
 
-#endif
+#endif //__TYPES_H

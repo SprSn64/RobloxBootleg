@@ -1,4 +1,4 @@
-COMPILE_FOLDERS := src
+COMPILE_FOLDERS := src src/game
 TARGET := RobloxBootlegEngine
 CC := gcc
 CFLAGS := -Wall -Wextra -O3 -Iinclude
