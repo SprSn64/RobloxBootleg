@@ -4,29 +4,46 @@
 #define max(a,b) ((a) > (b) ? (a) : (b))
 #define min(a,b) ((a) < (b) ? (a) : (b))
 
+typedef void *U0;
+typedef unsigned char    U8;
+typedef signed char      S8;
+typedef unsigned short   U16;
+typedef signed short     S16;
+typedef unsigned int     U32;
+typedef signed int       S32;
+typedef unsigned long long U64;
+typedef long long        S64;
+typedef float            F32;
+typedef double           F64;
+
+typedef F32 MTX16[16];
+
+#undef NULL
+#define NULL ((U0)0)
+
 typedef struct KeyMap{
 	char down, pressed;
-	int scanCode;
+	S32 scanCode;
 } KeyMap;
 
 typedef struct Vector2{
-	float x, y;
+	F32 x, y;
 } Vector2;
 
 typedef struct Vector3{
-	float x, y, z;
+	F32 x, y, z;
 } Vector3;
 
 typedef struct Vector4{
-	float x, y, z, w;
+	F32 x, y, z, w;
 } Vector4;
 
 typedef struct CharColour{
-	unsigned char r, g, b, a;
+	U8 r, g, b, a;
 } CharColour;
 
 typedef struct Colour{
-	float r, g, b;
+	F32 r, g, b;
 } Colour;
 
 typedef struct Vertex{

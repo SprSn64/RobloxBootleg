@@ -19,20 +19,20 @@ const char *fragmentShaderSource;
 
 Vector2 windowScale = {640, 480};
 Camera camera = {(Vector3){0, 0, 0.5}, (Vector3){0, 0, 0}};
-float cameraMoveSpeed = 960.f;
-float cameraRotSpeed = 12.f;
+F32 cameraMoveSpeed = 960.f;
+F32 cameraRotSpeed = 12.f;
 
 GLFWwindow *window = NULL;
 
 #define KEYCOUNT 10
 KeyMap keyList[KEYCOUNT];
 
-double last = 0;
-double now = 0;
-double deltaTime = 0;
-float timer = 0;
+F64 last = 0;
+F64 now = 0;
+F64 deltaTime = 0;
+F32 timer = 0;
 
-float triVerts[] = {
+F32 triVerts[] = {
 	-0.5f, -0.5f, -0.5f, 	1.f, 0.f, 0.f,
 	0.5f, -0.5f, -0.5f,	0.f, 1.f, 0.f,
 	0.5f, -0.5f, 0.5f,	0.f, 0.f, 1.f,
@@ -40,7 +40,7 @@ float triVerts[] = {
 	0.f, 0.5f, 0.f,		1.f, 0.f, 1.f,
 };
 
-unsigned int triFaces[] = {
+U32 triFaces[] = {
 	0, 1, 4,
 	1, 2, 4,
 	2, 3, 4,
@@ -49,7 +49,7 @@ unsigned int triFaces[] = {
 	0, 3, 2,
 };
 
-void error_callback(int error, const char *description){
+void error_callback(S32 error, const char *description){
 	fprintf(stderr, "Error: %s\n", description);
 }
 
@@ -107,17 +107,17 @@ int main(int argc, char *argv[]){
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 
-	unsigned int vertexShader;
+	U32 vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 	glCompileShader(vertexShader);
 
-	unsigned int fragmentShader;
+	U32 fragmentShader;
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
 
-	unsigned int shaderProgram;
+	U32 shaderProgram;
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
@@ -129,7 +129,7 @@ int main(int argc, char *argv[]){
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	unsigned int VAO, VBO, EBO;
+	U32 VAO, VBO, EBO;
 
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
@@ -142,25 +142,25 @@ int main(int argc, char *argv[]){
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(triFaces), triFaces, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (U0)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (U0)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	float *localMatrix = initMatrix();
-	float *viewMatrix = initMatrix();
-	float *projMatrix = initMatrix(); // perspMatrix(45.f * DEG2RAD, windowScale.x / windowScale.y, 0.1f, 100.f);
+	F32 *localMatrix = initMatrix();
+	F32 *viewMatrix = initMatrix();
+	F32 *projMatrix = initMatrix(); // perspMatrix(45.f * DEG2RAD, windowScale.x / windowScale.y, 0.1f, 100.f);
 
-	float *cameraMatrix = initMatrix();
-	int cameraLoc = glGetUniformLocation(shaderProgram, "camera");
+	F32 *cameraMatrix = initMatrix();
+	S32 cameraLoc = glGetUniformLocation(shaderProgram, "camera");
 
-	int modelLoc = glGetUniformLocation(shaderProgram, "model");
-	int viewLoc = glGetUniformLocation(shaderProgram, "view");
-	int projLoc = glGetUniformLocation(shaderProgram, "proj");
+	S32 modelLoc = glGetUniformLocation(shaderProgram, "model");
+	S32 viewLoc = glGetUniformLocation(shaderProgram, "view");
+	S32 projLoc = glGetUniformLocation(shaderProgram, "proj");
 
 	matrixTranslate(viewMatrix, (Vector3){0, 0, -0.5f});
 
@@ -225,7 +225,7 @@ int main(int argc, char *argv[]){
 		glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, cameraMatrix);
 
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, sizeof(triFaces) / sizeof(int), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(triFaces) / sizeof(U32), GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

@@ -5,17 +5,17 @@
 #include "math.h"
 #include <types.h>
 
-float lerp(float a, float b, float t){
+F32 lerp(F32 a, F32 b, F32 t){
 	return (a + t * (b - a));
 }
-float invLerp(float a, float b, float v){
+F32 invLerp(F32 a, F32 b, F32 v){
 	return (a - v) / (b - a);
 }
 
-float *multMatrix(float matrixA[16], float matrixB[16]){
+F32 *multMatrix(MTX16 matrixA, MTX16 matrixB){
 	// horrible code warning
 	float *output;
-	output = malloc(sizeof(float) * 16);
+	output = malloc(sizeof(MTX16));
 
 	output[0] = matrixA[0] * matrixB[0] + matrixA[4] * matrixB[1] + matrixA[8] * matrixB[2] + matrixA[12] * matrixB[3];
 	output[1] = matrixA[1] * matrixB[0] + matrixA[5] * matrixB[1] + matrixA[9] * matrixB[2] + matrixA[13] * matrixB[3];
@@ -37,7 +37,7 @@ float *multMatrix(float matrixA[16], float matrixB[16]){
 	return output;
 }
 
-Vector4 matrixTransform(Vector4 input, float matrix[16]){
+Vector4 matrixTransform(Vector4 input, MTX16 matrix){
 	Vector4 output = {
 		input.x * matrix[0] + input.y * matrix[4] + input.z * matrix[8] + input.w * matrix[12],
 		input.x * matrix[1] + input.y * matrix[5] + input.z * matrix[9] + input.w * matrix[13],
@@ -47,9 +47,9 @@ Vector4 matrixTransform(Vector4 input, float matrix[16]){
 	return output;
 }
 
-float *initMatrix(){
-	float *output;
-	output = malloc(sizeof(float) * 16);
+F32 *initMatrix(){
+	F32 *output;
+	output = malloc(sizeof(MTX16));
 	for (int i = 0; i < 16; i++)
 		output[i] = 0;
 	output[0] = 1.f;
@@ -59,11 +59,11 @@ float *initMatrix(){
 	return output;
 }
 
-float *perspMatrix(float fov, float aspect, float zNear, float zFar){
+F32 *perspMatrix(F32 fov, F32 aspect, F32 zNear, F32 zFar){
 	char rORl = 0;
 	char ZOorNO = 1;
-	float halfFov = tan(fov / 2);
-	float *output = initMatrix();
+	F32 halfFov = tan(fov / 2);
+	F32 *output = initMatrix();
 
 	output[0] = 1.f / (halfFov * aspect);
 	output[5] = 1.f / halfFov;
@@ -82,23 +82,23 @@ float *perspMatrix(float fov, float aspect, float zNear, float zFar){
 	return output;
 }
 
-int matrixRotate(float matrix[16], Vector3 rotate){
-	float *newMatrix = initMatrix();
-	float calcs[6] = {sin(rotate.x), cos(rotate.x), sin(rotate.y), cos(rotate.y), sin(rotate.z), cos(rotate.z)};
+S32 matrixRotate(MTX16 matrix, Vector3 rotate){
+	F32 *newMatrix = initMatrix();
+	F32 calcs[6] = {sin(rotate.x), cos(rotate.x), sin(rotate.y), cos(rotate.y), sin(rotate.z), cos(rotate.z)};
 
-	float *xMatrix = initMatrix();
+	F32 *xMatrix = initMatrix();
 	xMatrix[5] = calcs[1];
 	xMatrix[6] = -calcs[0];
 	xMatrix[9] = calcs[0];
 	xMatrix[10] = calcs[1];
 
-	float *yMatrix = initMatrix();
+	F32 *yMatrix = initMatrix();
 	yMatrix[0] = calcs[3];
 	yMatrix[2] = calcs[2];
 	yMatrix[8] = -calcs[2];
 	yMatrix[10] = calcs[3];
 
-	float *zMatrix = initMatrix();
+	F32 *zMatrix = initMatrix();
 	zMatrix[0] = calcs[5];
 	zMatrix[1] = -calcs[4];
 	zMatrix[4] = calcs[4];
@@ -106,18 +106,18 @@ int matrixRotate(float matrix[16], Vector3 rotate){
 
 	newMatrix = multMatrix(multMatrix(multMatrix(matrix, xMatrix), yMatrix), zMatrix);
 
-	memcpy(matrix, newMatrix, sizeof(float) * 16);
+	memcpy(matrix, newMatrix, sizeof(MTX16));
 	return 0;
 }
 
-int matrixTranslate(float matrix[16], Vector3 translate){
+S32 matrixTranslate(MTX16 matrix, Vector3 translate){
 	matrix[12] += translate.x;
 	matrix[13] += translate.y;
 	matrix[14] += translate.z;
 	return 0;
 }
 
-int matrixScale(float matrix[16], Vector3 scale){
+S32 matrixScale(MTX16 matrix, Vector3 scale){
 	matrix[0] += scale.x;
 	matrix[5] += scale.y;
 	matrix[11] += scale.z;

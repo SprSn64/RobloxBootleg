@@ -3,7 +3,7 @@
 
 #include <types.h>
 
-CharColour* SetCharColor(unsigned char, unsigned char, unsigned char, unsigned char);
-Colour* SetColor(float, float, float);
+CharColour* SetCharColor(U8 r, U8 g, U8 b, U8 a);
+Colour* SetColor(F32 r, F32 g, F32 b);
 
 #endif

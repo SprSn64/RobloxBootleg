@@ -7,7 +7,7 @@
 
 //create colors violently
 
-CharColour* SetCharColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+CharColour* SetCharColor(U8 r, U8 g, U8 b, U8 a) {
     CharColour* localColor = malloc(sizeof(CharColour));
     localColor->r = r;
     localColor->g = g;
@@ -16,7 +16,7 @@ CharColour* SetCharColor(unsigned char r, unsigned char g, unsigned char b, unsi
     return localColor;
 }
 
-Colour* SetColor(float r, float g, float b) {
+Colour* SetColor(F32 r, F32 g, F32 b) {
     Colour* localColor = malloc(sizeof(Colour));
     localColor->r = r;
     localColor->g = g;
