@@ -1,5 +1,5 @@
-#ifndef COLOR_H
-#define COLOR_H
+#ifndef MATERIALS_H
+#define MATERIALS_H
 
 #include <types.h>
 

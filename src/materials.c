@@ -1,4 +1,4 @@
-#include "color.h"
+#include "materials.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "loader.h"

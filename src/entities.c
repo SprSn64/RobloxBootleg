@@ -4,7 +4,7 @@
 #include "loader.h"
 #include "math.h"
 #include <types.h>
-#include "color.h"
+#include "materials.h"
 
 //kill people violently
 PartClass* TestPart;
