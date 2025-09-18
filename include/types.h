@@ -38,17 +38,17 @@ typedef struct Vector4{
 	F32 x, y, z, w;
 } Vector4;
 
-typedef struct CharColour{
+typedef struct CharColor{
 	U8 r, g, b, a;
-} CharColour;
+} CharColor;
 
-typedef struct Colour{
+typedef struct Color{
 	F32 r, g, b;
-} Colour;
+} Color;
 
 typedef struct Vertex{
 	Vector2 pos;
-	Colour colour;
+	Color color;
 } Vertex;
 
 typedef struct Camera{
