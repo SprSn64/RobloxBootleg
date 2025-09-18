@@ -15,3 +15,11 @@ CharColour* SetCharColor(unsigned char r, unsigned char g, unsigned char b, unsi
     localColor->a = a;
     return localColor;
 }
+
+Colour* SetColor(float r, float g, float b) {
+    Colour* localColor = malloc(sizeof(Colour));
+    localColor->r = r;
+    localColor->g = g;
+    localColor->b = b;
+    return localColor;
+}
