@@ -33,5 +33,5 @@ extern Object objects[MAX_OBJECTS];
 
 extern Object currentProcObj;
 
-extern Object createObject(ObjBhv bhv, U16 model, Vector3 pos, Vector3 rot, Vector3 scale);
+extern Object createObject(ObjBhv bhv, U16 model, Vector3 pos, Vector3 rot);
 #endif //OBJECT_h

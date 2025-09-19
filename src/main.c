@@ -116,8 +116,8 @@ int main(int argc, char *argv[])
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    createObject(bhv_Pyramid, MODEL_PYRAMID, (Vector3){1, 0, 0}, (Vector3){0, 0, 0}, (Vector3){1, 1, 1});
-    createObject(bhv_Static_Cube, MODEL_CUBE, (Vector3){0, 0, 0}, (Vector3){0, 0, 0}, (Vector3){1, 1, 1});
+    createObject(bhv_Pyramid, MODEL_PYRAMID, (Vector3){1, 0, 0}, (Vector3){0, 0, 0});
+    createObject(bhv_Static_Cube, MODEL_CUBE, (Vector3){0, 0, 0}, (Vector3){0, 0, 0});
 
     F32 *localMatrix = initMatrix();
     F32 *viewMatrix = initMatrix();
