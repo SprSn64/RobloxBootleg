@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
 
             matrixTranslate(modelMatrix, objects[i].pos);
             matrixRotate(modelMatrix, objects[i].rot);
-            // matrixScale(modelMatrix, objects[i].scale);
+            matrixScale(modelMatrix, objects[i].scale);
             glUniformMatrix4fv(modelLoc, 1, GL_FALSE, modelMatrix);
 
             glBindVertexArray(objects[i].VAO);

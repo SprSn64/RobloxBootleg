@@ -18,7 +18,7 @@ Object createObject(ObjBhv bhv, U16 model, Vector3 pos, Vector3 rot){
     obj.pos = pos;
     obj.basePos = pos;
     obj.rot = rot;
-
+    obj.scale = (Vector3){1,1,1};
     obj.bhv = bhv;
 
     glGenVertexArrays(1, &obj.VAO);

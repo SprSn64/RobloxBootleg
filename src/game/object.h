@@ -22,6 +22,7 @@ typedef struct Object {
     Vector3 pos;
     Vector3 basePos;
     Vector3 rot;
+    Vector3 scale;
     F32 timer;
 } Object;
 
